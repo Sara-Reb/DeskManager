@@ -1,2 +1,2 @@
 # DeskFLow
-Un gestionale clienti basic
+Web app per gestire pratiche/ticket con stati, note, scadenze e storico eventi.
