@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- css sheet -->
+    <link rel="stylesheet" href="/static/style.css" />
+
+    <title>DeskFLow: {%block title%}{%endblock%}</title>
+
+    <!-- include bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <nav
+      class="nav p-2 nav-underline justify-content-around align-items-center bg-light border"
+    >
+      <a class="nav-link nav-brand" href="#">
+        <img src="/images/logo.png" alt="logo" width="40" />
+        FlowDesk
+      </a>
+      <div class="d-flex gap-3">
+        <a class="nav-link" href="#">Dashboard</a>
+        <a class="nav-link" href="#">Practices</a>
+      </div>
+      <a class="nav-link" href="login.html">Login / Register</a>
+    </nav>
+    <main>
+      <div class="container p-2">{% block main %} {% endblock %}</div>
+    </main>
+  </body>
+</html>
