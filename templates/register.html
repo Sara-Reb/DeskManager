@@ -1,7 +1,7 @@
-{% extends "layout.html" %} {% block title %} Login {% endblock %} {%block main
+{% extends "layout.html" %} {% block title %} Register {% endblock %} {%block main
 %}
-<div class="login-page">
-  <form class="d-flex flex-column gap-4 my-5" method="POST" action="/login">
+<div class="register-page">
+  <form class="d-flex flex-column gap-4 my-5" method="POST" action="/register">
     <div>
       <input
         autocomplete="off"
@@ -25,11 +25,11 @@
       />
     </div>
     <div>
-      <button class="btn btn-primary w-100" type="submit">Accedi</button>
+      <button class="btn btn-primary w-100" type="submit">Registrati</button>
     </div>
     <div class="p-3 border-top text-center">
       <p>
-        Non hai un account? <a href="/register">Registrati qui</a>
+        Hai già un account? <a href="/login">Accedi qui</a>
       </p>
   </form>
   </div>

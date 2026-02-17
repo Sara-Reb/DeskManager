@@ -1,0 +1,14 @@
+
+
+
+/* landing page */
+ .landing-page p {
+  font-size: 1.2rem;
+}
+
+/* login page */
+.login-page form,
+.register-page form {
+  max-width: 400px;
+  margin: auto;
+}

@@ -13,12 +13,18 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 @app.route("/")
-@login_required
 def index():
-    return render_template('/index.html')
+    return render_template('/landing.html')
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     session.clear()
     if request.method == 'GET':
         return render_template('/login.html')
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    session.clear()
+
+    if request.method == 'GET':
+        return render_template('/register.html')

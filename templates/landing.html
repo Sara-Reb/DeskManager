@@ -1,0 +1,22 @@
+{% extends "layout.html" %} {% block title %} Landing {% endblock %} {% block
+main%}
+<div class="landing-page d-flex flex-column gap-3 text-center p-1 my-5">
+  <h1>FlowDesk</h1>
+  <p>
+    <strong>FlowDesk</strong> è un’applicazione web pensata per organizzare e
+    monitorare pratiche e attività operative in modo semplice e strutturato.
+  </p>
+  <p>
+    di creare, aggiornare e tracciare lo stato delle lavorazioni, mantenendo una
+    vista chiara su scadenze, priorità e storico delle modifiche.
+  </p>
+  <div class="row justify-content-around gap-3">
+    <div class="col-8 col-sm-5">
+      <a href="/login" class="btn btn-primary w-100">Accedi</a>
+    </div>
+    <div class="col-8 col-sm-5">
+      <a href="/register" class="btn btn-primary w-100">Registrati</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
