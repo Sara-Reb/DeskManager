@@ -3,7 +3,6 @@ import sqlite3
 
 from flask import Flask, flash, render_template, request, redirect, session
 from flask_session import Session
-from redis import Redis
 from helpers import login_required, get_db_connection
 from bcrypt import gensalt, hashpw, checkpw
 
@@ -85,7 +84,7 @@ def register():
             except:
                 message = 'Nome utente già esistente'
                 return render_template('/register.html',username_message=message)
-            finally:
+            else:
                 connection.commit()
                 connection.close()
             return redirect('/login')
