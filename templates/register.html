@@ -1,5 +1,5 @@
-{% extends "layout.html" %} {% block title %} Register {% endblock %} {%block main
-%}
+{% extends "layout.html" %} {% block title %} Register {% endblock %} {%block
+main %}
 <div class="register-page">
   <form class="d-flex flex-column gap-4 my-5" method="POST" action="/register">
     <div>
@@ -12,6 +12,10 @@
         class="form-control"
         required
       />
+      <small class="d-block text-danger">{{username_message}}</small>
+      <small class="d-block text-secondary"
+        >Il nome utente deve essere lungo almeno 3 caratteri</small
+      >
     </div>
     <div>
       <input
@@ -23,14 +27,29 @@
         class="form-control"
         required
       />
+      <small class="d-block text-danger">{{password_message}}</small>
+      <small class="d-block text-secondary"
+        >La password deve essere lunga almeno 8 caratteri</small
+      >
+    </div>
+    <div>
+      <input
+        autocomplete="off"
+        type="password"
+        autofocus
+        name="confirmation"
+        placeholder="Conferma password"
+        class="form-control"
+        required
+      />
+      <small class="d-block text-danger">{{password_message}}</small>
     </div>
     <div>
       <button class="btn btn-primary w-100" type="submit">Registrati</button>
     </div>
     <div class="p-3 border-top text-center">
-      <p>
-        Hai già un account? <a href="/login">Accedi qui</a>
-      </p>
+      <p>Hai già un account? <a href="/login">Accedi qui</a></p>
+    </div>
   </form>
-  </div>
+</div>
 {%endblock%}
