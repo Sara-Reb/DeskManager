@@ -1,0 +1,39 @@
+{% extends "layout.html" %} {% block title %} Tasks {% endblock %} {% block main
+%}
+
+<div class="container-fluid">
+  <table id="tasksTable" class="table table-striped">
+    <thead>
+      <tr>
+        <th>Titolo</th>
+        <th>Priorità</th>
+        <th>Stato</th>
+        <th>Scadenza</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for task in tasks %}
+      <tr>
+        <td>{{ task.title }}</td>
+        <td>{{ task.priority }}</td>
+        <td>{{ task.status }}</td>
+        <td>{{ task.due_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    new DataTable("#tasksTable", {
+      order: [[3, "asc"]],
+      layout: {
+        topStart: null,
+      },
+      language: {
+        url: "https://cdn.datatables.net/plug-ins/2.0.8/i18n/it-IT.json",
+      },
+    });
+  });
+</script>
+{% endblock %}

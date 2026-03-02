@@ -1,7 +1,6 @@
-import os
-import sqlite3
 
-from flask import Flask, flash, render_template, request, redirect, session
+
+from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
 from helpers import login_required, get_db_connection
 from bcrypt import gensalt, hashpw, checkpw
@@ -42,7 +41,7 @@ def login():
             connection.close()
             if user is None or not checkpw(password.encode('utf-8'),user['password']):
                 message = 'Nome utente o password non corretti'
-                return render_template('login.html',check_message=message)
+                return render_template('/login.html',check_message=message)
             else:
                 session['user_id'] = user['id']
             return redirect('/')
@@ -83,6 +82,7 @@ def register():
                 connection.execute('INSERT INTO users (username, password) VALUES (?,?)',(username, pw))
             except:
                 message = 'Nome utente già esistente'
+                connection.close()
                 return render_template('/register.html',username_message=message)
             else:
                 connection.commit()
@@ -93,3 +93,16 @@ def register():
 def logout():
     session.clear()
     return redirect ('/')
+
+
+@app.route("/tasks")
+@login_required
+def tasks():
+    user_id = session['user_id']
+    conn = get_db_connection()
+    tasks = conn.execute('SELECT * FROM tasks WHERE user_id = ? ',(user_id,)).fetchall()
+    conn.close()
+    return render_template('/tasks.html', tasks=tasks)
+
+if __name__ == "__main__":
+    app.run(debug=True)
