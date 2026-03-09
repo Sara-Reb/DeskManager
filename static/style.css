@@ -1,4 +1,17 @@
 
+*{
+  box-sizing: border-box;
+  min-height: 0;
+}
+
+body {
+  height: 100vh;
+}
+
+main > .container-fluid {
+  height: calc(100vh - 70px);
+  padding: 1rem;
+}
 
 
 /* landing page */

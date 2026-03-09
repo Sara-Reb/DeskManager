@@ -6,6 +6,13 @@ from helpers import login_required, get_db_connection
 from bcrypt import gensalt, hashpw, checkpw
 
 
+STATUS_CLASSES = {
+    "Aperta": "text-bg-secondary",
+    "In attesa": "text-bg-warning",
+    "In lavorazione": "text-bg-primary",
+    "Completata": "text-bg-success",
+}
+
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -103,6 +110,17 @@ def tasks():
     tasks = conn.execute('SELECT * FROM tasks WHERE user_id = ? ',(user_id,)).fetchall()
     conn.close()
     return render_template('/tasks.html', tasks=tasks)
+
+@app.route('/tasks/<int:task_id>')
+@login_required
+def task_detail(task_id):
+    user_id = session['user_id']
+    conn = get_db_connection()
+    task = conn.execute(' SELECT * FROM tasks WHERE id = ? AND user_id = ?',(task_id, user_id)).fetchone()
+    notes = conn.execute('SELECT * FROM notes WHERE task_id = ? ORDER BY created_at DESC',(task_id,)).fetchall()
+    status_history = conn.execute('SELECT * FROM status_history WHERE task_id = ? ORDER BY changed_at DESC',(task_id,)).fetchall()
+    conn.close()
+    return render_template('/task_detail.html', task=task, notes=notes, status_history=status_history, status_classes=STATUS_CLASSES)
 
 if __name__ == "__main__":
     app.run(debug=True)

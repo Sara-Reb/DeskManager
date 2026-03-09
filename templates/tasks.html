@@ -1,28 +1,27 @@
 {% extends "layout.html" %} {% block title %} Tasks {% endblock %} {% block main
 %}
 
-<div class="container-fluid">
-  <table id="tasksTable" class="table table-striped">
-    <thead>
-      <tr>
-        <th>Titolo</th>
-        <th>Priorità</th>
-        <th>Stato</th>
-        <th>Scadenza</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for task in tasks %}
-      <tr>
-        <td>{{ task.title }}</td>
-        <td>{{ task.priority }}</td>
-        <td>{{ task.status }}</td>
-        <td>{{ task.due_date }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-</div>
+<table id="tasksTable" class="table table-striped">
+  <thead>
+    <tr>
+      <th>Titolo</th>
+      <th>Priorità</th>
+      <th>Stato</th>
+      <th>Scadenza</th>
+    </tr>
+  </thead>
+  <tbody class="table-group-divider">
+    {% for task in tasks %}
+    <tr data-id="{{task.id}}">
+      <td>{{ task.title }}</td>
+      <td>{{ task.priority }}</td>
+      <td>{{ task.status }}</td>
+      <td>{{ task.due_date }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     new DataTable("#tasksTable", {
@@ -33,6 +32,12 @@
       language: {
         url: "https://cdn.datatables.net/plug-ins/2.0.8/i18n/it-IT.json",
       },
+    });
+    document.querySelectorAll("#tasksTable tbody tr").forEach((row) => {
+      row.addEventListener("click", () => {
+        const taskId = row.getAttribute("data-id");
+        window.location.href = `/tasks/${taskId}`;
+      });
     });
   });
 </script>
