@@ -1,7 +1,6 @@
 
 *{
   box-sizing: border-box;
-  min-height: 0;
 }
 
 body {
@@ -25,3 +24,23 @@ main > .container-fluid {
   max-width: 400px;
   margin: auto;
 }
+
+/* task detail page */
+.task-col-1 {
+  max-height: 40vh;
+}
+.task-col-2 {
+  max-height: 60vh;
+}
+@media (min-width: 768px) {
+  .task-col-1,
+  .task-col-2 {
+    max-height: 100%;
+  }
+}
+
+/* task detail layout fix */
+.task-detail-page * {
+  min-height: 0;
+}
+

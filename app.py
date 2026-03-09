@@ -13,6 +13,13 @@ STATUS_CLASSES = {
     "Completata": "text-bg-success",
 }
 
+STATUS_ALLOWED_TRANSITIONS = {
+    "Aperta": ["In attesa", "In lavorazione",'Completata'],
+    "In attesa": ["In lavorazione", "Completata"],
+    "In lavorazione": [ "In attesa","Completata"],
+    "Completata": ['Aperta']
+}
+
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -111,16 +118,35 @@ def tasks():
     conn.close()
     return render_template('/tasks.html', tasks=tasks)
 
-@app.route('/tasks/<int:task_id>')
+@app.route('/tasks/<int:task_id>',methods=['GET', 'POST'])
 @login_required
 def task_detail(task_id):
-    user_id = session['user_id']
-    conn = get_db_connection()
-    task = conn.execute(' SELECT * FROM tasks WHERE id = ? AND user_id = ?',(task_id, user_id)).fetchone()
-    notes = conn.execute('SELECT * FROM notes WHERE task_id = ? ORDER BY created_at DESC',(task_id,)).fetchall()
-    status_history = conn.execute('SELECT * FROM status_history WHERE task_id = ? ORDER BY changed_at DESC',(task_id,)).fetchall()
-    conn.close()
-    return render_template('/task_detail.html', task=task, notes=notes, status_history=status_history, status_classes=STATUS_CLASSES)
+    if request.method == 'POST':
+        content = request.form.get('content')
+        status = request.form.get('status')
+        user_id = session['user_id']
+        conn = get_db_connection()
+        from_status = conn.execute('SELECT status FROM tasks WHERE id = ? AND user_id = ?', (task_id, user_id)).fetchone()['status']
+        if not content and status == from_status:
+            return redirect(f'/tasks/{task_id}')
+        else:
+            if content:
+                
+                conn.execute('INSERT INTO notes (task_id, content) VALUES (?, ?)', (task_id, content))
+            if status and status != from_status:
+                conn.execute('UPDATE tasks SET status = ? WHERE id = ? AND user_id = ?', (status, task_id, user_id))
+                conn.execute('INSERT INTO status_history (task_id, from_status, to_status) VALUES (?, ?, ?)', (task_id, from_status, status))
+            conn.commit()
+            conn.close()
+            return redirect(f'/tasks/{task_id}')
+    else:
+        user_id = session['user_id']
+        conn = get_db_connection()
+        task = conn.execute(' SELECT * FROM tasks WHERE id = ? AND user_id = ?',(task_id, user_id)).fetchone()
+        notes = conn.execute('SELECT * FROM notes WHERE task_id = ? ORDER BY created_at DESC',(task_id,)).fetchall()
+        status_history = conn.execute('SELECT * FROM status_history WHERE task_id = ? ORDER BY changed_at DESC',(task_id,)).fetchall()
+        conn.close()
+        return render_template('/task_detail.html', task=task, notes=notes, status_history=status_history, status_classes=STATUS_CLASSES,allowed = STATUS_ALLOWED_TRANSITIONS[task['status']])
 
 if __name__ == "__main__":
     app.run(debug=True)
