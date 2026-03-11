@@ -20,6 +20,11 @@ STATUS_ALLOWED_TRANSITIONS = {
     "Completata": ['Aperta']
 }
 
+PRIORITY_CLASSES = {
+    "Bassa": "text-bg-secondary",
+    "Media": "text-bg-warning",
+    "Alta": "text-bg-danger"
+}
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -126,27 +131,75 @@ def task_detail(task_id):
         status = request.form.get('status')
         user_id = session['user_id']
         conn = get_db_connection()
-        from_status = conn.execute('SELECT status FROM tasks WHERE id = ? AND user_id = ?', (task_id, user_id)).fetchone()['status']
-        if not content and status == from_status:
+        row = conn.execute(
+            'SELECT status FROM tasks WHERE id = ? AND user_id = ?',
+            (task_id, user_id)
+        ).fetchone()
+
+        if row is None:
+            conn.close()
+            return redirect('/tasks')
+
+        from_status = row['status']
+        if (not content and status == from_status) or (status and status != from_status and status not in STATUS_ALLOWED_TRANSITIONS[from_status]):
+            conn.close()
             return redirect(f'/tasks/{task_id}')
         else:
             if content:
                 
                 conn.execute('INSERT INTO notes (task_id, content) VALUES (?, ?)', (task_id, content))
-            if status and status != from_status:
-                conn.execute('UPDATE tasks SET status = ? WHERE id = ? AND user_id = ?', (status, task_id, user_id))
+                conn.execute('UPDATE tasks SET updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?', (task_id, user_id))
+            if status and status != from_status and status in STATUS_ALLOWED_TRANSITIONS[from_status]:
                 conn.execute('INSERT INTO status_history (task_id, from_status, to_status) VALUES (?, ?, ?)', (task_id, from_status, status))
+                conn.execute('UPDATE tasks SET status = ? WHERE id = ? AND user_id = ?', (status, task_id, user_id))
+                conn.execute('UPDATE tasks SET updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?', (task_id, user_id))
+                
+                
             conn.commit()
             conn.close()
             return redirect(f'/tasks/{task_id}')
     else:
         user_id = session['user_id']
         conn = get_db_connection()
-        task = conn.execute(' SELECT * FROM tasks WHERE id = ? AND user_id = ?',(task_id, user_id)).fetchone()
+        task = conn.execute(
+            'SELECT * FROM tasks WHERE id = ? AND user_id = ?',
+            (task_id, user_id)
+        ).fetchone()
+
+        if task is None:
+            conn.close()
+            return redirect('/tasks')
         notes = conn.execute('SELECT * FROM notes WHERE task_id = ? ORDER BY created_at DESC',(task_id,)).fetchall()
         status_history = conn.execute('SELECT * FROM status_history WHERE task_id = ? ORDER BY changed_at DESC',(task_id,)).fetchall()
         conn.close()
-        return render_template('/task_detail.html', task=task, notes=notes, status_history=status_history, status_classes=STATUS_CLASSES,allowed = STATUS_ALLOWED_TRANSITIONS[task['status']])
+        return render_template('/task_detail.html', task=task, notes=notes, status_history=status_history, status_classes=STATUS_CLASSES,allowed = STATUS_ALLOWED_TRANSITIONS[task['status']], priority_class=PRIORITY_CLASSES[task['priority']])
+
+
+@app.route('/new_task', methods=['GET', 'POST'])
+@login_required
+def new_task():
+    if request.method == 'GET':
+        return render_template('/new_task.html')
+    if request.method == 'POST':
+        title = request.form.get('title')
+        priority = request.form.get('priority')
+        due_date = request.form.get('due_date') or None
+        note = request.form.get('note')
+        user_id = session['user_id']
+        if not title or not priority:
+            return render_template('/new_task.html', title_message='Titolo richiesto' if not title else '', priority_message='Priorità richiesta' if not priority else '')
+        else:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute('INSERT INTO tasks (user_id, title, priority, status, due_date) VALUES (?, ?, ?, ?, ?)', (user_id, title, priority, 'Aperta', due_date))
+            task_id = cur.lastrowid
+            cur.execute('INSERT INTO status_history (task_id, from_status, to_status) VALUES (?, ?, ?)', (task_id, None, 'Aperta'))
+            if note:
+                cur.execute('INSERT INTO notes (task_id, content) VALUES (?, ?)', (task_id, note))
+            
+            conn.commit()
+            conn.close()
+            return redirect(f'/tasks/{task_id}')
 
 if __name__ == "__main__":
     app.run(debug=True)

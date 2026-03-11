@@ -1,0 +1,69 @@
+{% extends 'layout.html' %} {% block title %} Nuova Task {% endblock %} {% block
+main %}
+<div class="new-task-page">
+  <div class="container">
+    <form action="/new_task" method="post" class="d-flex flex-column gap-4">
+      <div>
+        <label for="titleInput" class="form-label">Titolo *</label>
+        <input
+          type="text"
+          class="form-control"
+          name="title"
+          id="titleInput"
+          required
+          autofocus
+          value="{{ request.form.title }}"
+        />
+        <small class="text-danger">{{ title_message }}</small>
+      </div>
+      <div class="row g-4">
+        <div class="col-sm-6">
+          <label for="priorityInput" class="form-label">Priorità *</label>
+          <select
+            class="form-select"
+            name="priority"
+            id="priorityInput"
+            required
+          >
+            <option value="" disabled selected>- -</option>
+            <option value="Bassa">Bassa</option>
+            <option value="Media">Media</option>
+            <option value="Alta">Alta</option>
+          </select>
+          <small class="text-danger">{{ priority_message }}</small>
+        </div>
+        <div class="col-sm-6">
+          <label for="dueDateInput" class="form-label">Scadenza</label>
+          <input
+            type="date"
+            class="form-control"
+            name="due_date"
+            id="dueDateInput"
+            value="{{request.form.due_date}}"
+          />
+        </div>
+      </div>
+
+      <div>
+        <label for="noteInput" class="form-label">Note</label>
+        <textarea class="form-control" name="note" id="noteInput" rows="4">
+{{ request.form.note }}</textarea
+        >
+      </div>
+      <div>
+        <small class="text-muted">* Campi obbligatori</small>
+      </div>
+      <div class="d-flex justify-content-end gap-3 border-top pt-3">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="history.back()"
+        >
+          Annulla
+        </button>
+        <button type="submit" class="btn btn-primary">Crea Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

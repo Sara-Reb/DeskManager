@@ -1,26 +1,28 @@
 {% extends "layout.html" %} {% block title %} Tasks {% endblock %} {% block main
 %}
 
-<table id="tasksTable" class="table table-striped">
-  <thead>
-    <tr>
-      <th>Titolo</th>
-      <th>Priorità</th>
-      <th>Stato</th>
-      <th>Scadenza</th>
-    </tr>
-  </thead>
-  <tbody class="table-group-divider">
-    {% for task in tasks %}
-    <tr data-id="{{task.id}}">
-      <td>{{ task.title }}</td>
-      <td>{{ task.priority }}</td>
-      <td>{{ task.status }}</td>
-      <td>{{ task.due_date }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="task-page">
+  <table id="tasksTable" class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th>Titolo</th>
+        <th>Priorità</th>
+        <th>Stato</th>
+        <th>Scadenza</th>
+      </tr>
+    </thead>
+    <tbody class="table-group-divider">
+      {% for task in tasks %}
+      <tr data-id="{{task.id}}">
+        <td>{{ task.title }}</td>
+        <td>{{ task.priority }}</td>
+        <td>{{ task.status }}</td>
+        <td>{{ task.due_date }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {

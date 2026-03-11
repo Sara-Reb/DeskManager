@@ -5,6 +5,7 @@
 
 body {
   height: 100vh;
+  min-width: 320px;
 }
 
 main > .container-fluid {
@@ -27,10 +28,10 @@ main > .container-fluid {
 
 /* task detail page */
 .task-col-1 {
-  max-height: 40vh;
+  max-height: 45vh;
 }
 .task-col-2 {
-  max-height: 60vh;
+  max-height: 65vh;
 }
 @media (min-width: 768px) {
   .task-col-1,
