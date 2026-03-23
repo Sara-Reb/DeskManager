@@ -8,7 +8,7 @@ body {
   min-width: 320px;
 }
 
-main > .container-fluid {
+main > .container {
   height: calc(100vh - 70px);
   padding: 1rem;
 }
@@ -30,18 +30,41 @@ main > .container-fluid {
 .task-col-1 {
   max-height: 45vh;
 }
+
 .task-col-2 {
   max-height: 65vh;
 }
-@media (min-width: 768px) {
-  .task-col-1,
-  .task-col-2 {
-    max-height: 100%;
-  }
-}
+
 
 /* task detail layout fix */
 .task-detail-page * {
   min-height: 0;
 }
 
+
+/* Dashboard */
+
+ .row-first {
+  max-height: 25vh;
+}
+
+ .row-second > [class^="col-"] {
+    max-height: 45vh;
+}
+
+@media (min-width: 768px) {
+  .task-col-1,
+  .task-col-2 {
+    max-height: 100%;
+  }
+  .row-first {
+    max-height: 25%;
+  }
+
+  .row-second{
+    max-height: 75%;
+  }
+  .row-second > [class^="col-"] {
+    max-height: 100%;
+  }
+}

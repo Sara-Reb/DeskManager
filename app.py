@@ -2,8 +2,9 @@
 
 from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
-from helpers import login_required, get_db_connection
+from helpers import login_required, get_db_connection, display_date
 from bcrypt import gensalt, hashpw, checkpw
+import datetime as dt
 
 
 STATUS_CLASSES = {
@@ -31,10 +32,48 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+app.jinja_env.filters['display_date'] = display_date
+
 @app.route("/")
 @login_required
 def index():
-    return render_template('/index.html')
+    user_id = session['user_id']
+    conn = get_db_connection()
+
+    status_count = conn.execute('SELECT COUNT(*) AS count,status FROM tasks WHERE user_id = ? GROUP BY status',(user_id,)).fetchall()
+    status_count = {row['status']: row['count'] for row in status_count}
+
+    overdue_list = conn.execute('SELECT * FROM tasks WHERE user_id = ? AND due_date < ? AND status != "Completata" ORDER BY due_date ASC',(user_id,dt.date.today().strftime('%Y-%m-%d'))).fetchall()
+
+    week_later = (dt.date.today() + dt.timedelta(days=7)).strftime('%Y-%m-%d')
+    upcoming_list = conn.execute('SELECT * FROM tasks WHERE user_id = ? AND due_date >= ? AND due_date<=? AND status != "Completata" ORDER BY due_date ASC',(user_id,dt.date.today().strftime('%Y-%m-%d'),week_later)).fetchall()
+
+    last_updates= conn.execute( 
+        '''
+        SELECT
+        t.id AS task_id,
+        t.title AS task_title,
+        "Nota aggiunta" AS update_type,
+        n.created_at AS updated_at
+    FROM notes n
+    JOIN tasks t ON n.task_id = t.id
+
+    UNION ALL
+
+    SELECT 
+        t.id AS task_id,
+        t.title AS task_title,
+        "Stato cambiato" AS update_type,
+        sh.changed_at AS updated_at
+    FROM status_history sh
+    JOIN tasks t ON sh.task_id = t.id
+    WHERE sh.from_status IS NOT NULL
+
+    ORDER BY updated_at DESC
+    LIMIT 10
+    ''').fetchall()
+    conn.close()
+    return render_template('/index.html', status_count=status_count, overdue_list=overdue_list, upcoming_list=upcoming_list, updates_list=last_updates)
 
 @app.route('/landing')
 def landing():
@@ -121,7 +160,7 @@ def tasks():
     conn = get_db_connection()
     tasks = conn.execute('SELECT * FROM tasks WHERE user_id = ? ',(user_id,)).fetchall()
     conn.close()
-    return render_template('/tasks.html', tasks=tasks)
+    return render_template('/tasks.html', tasks=tasks, status_classes=STATUS_CLASSES, priority_class=PRIORITY_CLASSES)
 
 @app.route('/tasks/<int:task_id>',methods=['GET', 'POST'])
 @login_required

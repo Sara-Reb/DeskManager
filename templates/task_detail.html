@@ -33,7 +33,7 @@
                 />
                 <p class="card-text">Creata:</p>
               </div>
-              <p class="card-text">{{ task.created_at }}</p>
+              <p class="card-text">{{ task.created_at | display_date }}</p>
             </div>
 
             <div
@@ -47,7 +47,7 @@
                 />
                 <p class="card-text">Scadenza:</p>
               </div>
-              <p class="card-text">{{ task.due_date }}</p>
+              <p class="card-text">{{ task.due_date | display_date }}</p>
             </div>
             <div
               class="d-flex flex-row flex-md-column flex-lg-row justify-content-between gap-1"
@@ -60,7 +60,7 @@
                 />
                 <p class="card-text">Aggiornato:</p>
               </div>
-              <p class="card-text">{{ task.updated_at }}</p>
+              <p class="card-text">{{ task.updated_at | display_date }}</p>
             </div>
           </div>
           <div class="flex-grow-1 d-flex flex-column gap-3">
@@ -75,7 +75,7 @@
                     >{{ row.to_status }}</span
                   >
                   <small class="text-muted text-end">
-                    {{ row.changed_at }}</small
+                    {{ row.changed_at | display_date }}</small
                   >
                 </li>
                 {% else %}{% endfor %}
@@ -104,7 +104,7 @@
                   aria-expanded="{% if loop.first %}true{% else %}false{% endif %}"
                   aria-controls="collapse-{{ note.id }}"
                 >
-                  {{ note.created_at }}
+                  {{ note.created_at | display_date }}
                 </button>
               </h2>
 
