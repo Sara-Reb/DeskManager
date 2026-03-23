@@ -1,51 +1,55 @@
 {% extends "layout.html" %} {% block title %} Tasks {% endblock %} {% block main
 %}
 
-<div class="task-page">
-  <table id="tasksTable" class="table table-striped table-hover">
-    <thead>
-      <tr>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-      </tr>
-      <tr>
-        <th>Titolo</th>
-        <th>Priorità</th>
-        <th>Stato</th>
-        <th>Scadenza</th>
-      </tr>
-    </thead>
-    <tbody class="table-group-divider">
-      {% for task in tasks %}
-      <tr data-id="{{task.id}}">
-        <td>{{ task.title }}</td>
-        <td>
-          <span class=" badge {{ priority_class[task.priority] }}"
-            >{{ task.priority }}</span
-          >
-        </td>
-        <td>
-          <span class="badge {{ status_classes[task.status] }}"
-            >{{ task.status }}</span
-          >
-        </td>
-        <td>{{ task.due_date | display_date }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="task-page h-100">
+  <div class="overflow-auto h-100">
+    <table id="tasksTable" class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+          <th></th>
+          <th></th>
+        </tr>
+        <tr>
+          <th>Titolo</th>
+          <th>Priorità</th>
+          <th>Stato</th>
+          <th>Scadenza</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for task in tasks %}
+        <tr data-id="{{task.id}}">
+          <td>{{ task.title }}</td>
+          <td>
+            <span class=" badge {{ priority_class[task.priority] }}"
+              >{{ task.priority }}</span
+            >
+          </td>
+          <td>
+            <span class="badge {{ status_classes[task.status] }}"
+              >{{ task.status }}</span
+            >
+          </td>
+          <td>{{ task.due_date | display_date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    new DataTable("#tasksTable", {
+    const selectedStatus = "{{ selected_status or '' }}";
+    let table = new DataTable("#tasksTable", {
       orderCellsTop: false,
       order: [[3, "asc"]],
       layout: {
         topStart: null,
       },
+
       language: {
         url: "https://cdn.datatables.net/plug-ins/2.0.8/i18n/it-IT.json",
       },
@@ -55,33 +59,39 @@
           .every(function () {
             let column = this;
 
-            // Create select element
             let select = document.createElement("select");
             select.add(new Option(""));
-            select.classList.add("form-select", "d-block");
+            select.classList.add("form-select", "w-auto");
             column
               .header()
               .parentNode.previousElementSibling.children[
                 column.index()
               ].replaceChildren(select);
 
-            // Apply listener for user change in value
             select.addEventListener("change", function () {
               column.search(select.value, { exact: true }).draw();
             });
 
-            // Add list of options
             column
               .data()
               .map((d) => $(d).text())
               .unique()
               .sort()
-              .each(function (d, j) {
-                select.add(new Option(d));
+              .each(function (d) {
+                const option = new Option(d, d);
+
+                if (d === selectedStatus) {
+                  option.selected = true;
+                }
+
+                select.add(option);
               });
           });
+
+        this.api().column(2).search(selectedStatus, { exact: true }).draw();
       },
     });
+
     document.querySelectorAll("#tasksTable tbody tr").forEach((row) => {
       row.addEventListener("click", () => {
         const taskId = row.getAttribute("data-id");

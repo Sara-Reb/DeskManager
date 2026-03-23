@@ -160,7 +160,8 @@ def tasks():
     conn = get_db_connection()
     tasks = conn.execute('SELECT * FROM tasks WHERE user_id = ? ',(user_id,)).fetchall()
     conn.close()
-    return render_template('/tasks.html', tasks=tasks, status_classes=STATUS_CLASSES, priority_class=PRIORITY_CLASSES)
+    selected_status = request.args.get("status") or ''
+    return render_template('/tasks.html', tasks=tasks, status_classes=STATUS_CLASSES, priority_class=PRIORITY_CLASSES, selected_status=selected_status)
 
 @app.route('/tasks/<int:task_id>',methods=['GET', 'POST'])
 @login_required
