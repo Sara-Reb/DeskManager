@@ -2,7 +2,7 @@
 
 from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
-from dbm import sqlite3
+import sqlite3
 from helpers import login_required, get_db_connection, display_date
 from bcrypt import gensalt, hashpw, checkpw
 import datetime as dt
