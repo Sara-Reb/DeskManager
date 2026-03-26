@@ -2,6 +2,7 @@
 
 from flask import Flask, render_template, request, redirect, session
 from flask_session import Session
+from dbm import sqlite3
 from helpers import login_required, get_db_connection, display_date
 from bcrypt import gensalt, hashpw, checkpw
 import datetime as dt
@@ -135,13 +136,18 @@ def register():
             return render_template('/register.html', password_message=message)
         else:
             connection = get_db_connection()
-            try: 
+            try:
                 pw = hashpw(password.encode('utf-8'), gensalt())
-                connection.execute('INSERT INTO users (username, password) VALUES (?,?)',(username, pw))
-            except:
+                connection.execute('INSERT INTO users (username, password) VALUES (?,?)', (username, pw))
+            except sqlite3.IntegrityError:
                 message = 'Nome utente già esistente'
                 connection.close()
-                return render_template('/register.html',username_message=message)
+                return render_template('/register.html', username_message=message)
+            except Exception as e:
+                app.logger.error(f"Registration error: {e}")
+                message = 'Errore durante la registrazione'
+                connection.close()
+                return render_template('/register.html', username_message=message)
             else:
                 connection.commit()
                 connection.close()
