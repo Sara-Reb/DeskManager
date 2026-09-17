@@ -7,7 +7,7 @@ main %}
   <div class="row g-3 row-first">
     <div class="col-6 col-md-3">
       <a
-        href="/tasks?status=Aperta"
+        href="{{url_for('tasks', status='Aperta')}}"
         class="card text-center text- bg-secondary-subtle"
       >
         <div class="card-body">
@@ -22,7 +22,7 @@ main %}
     </div>
     <div class="col-6 col-md-3">
       <a
-        href="/tasks?status=In+attesa"
+        href="{{url_for('tasks', status='In+attesa')}}"
         class="card text-center bg-warning-subtle"
       >
         <div class="card-body">
@@ -37,7 +37,7 @@ main %}
     </div>
     <div class="col-6 col-md-3">
       <a
-        href="/tasks?status=In+lavorazione"
+        href="{{url_for('tasks', status='In+lavorazione')}}"
         class="card text-center bg-primary-subtle"
       >
         <div class="card-body">
@@ -52,7 +52,7 @@ main %}
     </div>
     <div class="col-6 col-md-3">
       <a
-        href="/tasks?status=Completata"
+        href="{{url_for('tasks', status='Completata')}}"
         class="card text-center bg-success-subtle"
       >
         <div class="card-body">
@@ -74,7 +74,7 @@ main %}
           <ul class="list-group list-group-flush">
             {% for task in overdue_list %}
             <a
-              href="/tasks/{{ task.id }}"
+              href="{{ url_for('task_detail', task_id=task.id) }}"
               class="list-group-item list-group-item-warning d-flex align-items-center gap-1"
             >
               <img src="/static/images/exclamation-triangle.svg" alt="danger" />
@@ -91,7 +91,7 @@ main %}
           <ul class="list-group list-group-flush">
             {% for task in upcoming_list %}
             <a
-              href="/tasks/{{ task.id }}"
+              href="{{url_for('task_detail', task_id=task.id)}}"
               class="list-group-item d-flex align-items-center gap-1"
             >
               {{ task.title }}
@@ -110,7 +110,10 @@ main %}
         <div class="overflow-auto">
           <ul class="list-group list-group-flush">
             {% for update in updates_list %}
-            <a href="/tasks/{{ update.task_id }}" class="list-group-item">
+            <a
+              href="{{ url_for('task_detail', task_id=update.task_id) }}"
+              class="list-group-item"
+            >
               <div class="d-flex justify-content-between align-items-center">
                 <strong>{{ update.update_type }}</strong>
                 <span class="badge bg-secondary"

@@ -16,7 +16,7 @@ def login_required(f):
 
 def get_db_connection():
     # Function to establish a connection to the SQLite database
-    connection = sqlite3.connect('deskflow.db')
+    connection = sqlite3.connect('deskmanager.db')
     connection.row_factory = sqlite3.Row
     return connection
 

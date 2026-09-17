@@ -1,7 +1,7 @@
 {% extends "layout.html" %} {% block title %} Login {% endblock %} {%block main
 %}
 <div class="login-page">
-  <form class="d-flex flex-column gap-4 my-5" method="POST" action="/login">
+  <form class="d-flex flex-column gap-4 my-5" method="POST" action="{{ url_for('login') }}">
     <small class="d-block text-danger text-center">{{check_message}}</small>
     <div>
       <input
@@ -34,7 +34,7 @@
     </div>
     <div class="p-3 border-top text-center">
       <p>
-        Non hai un account? <a href="/register">Registrati qui</a>
+        Non hai un account? <a href="{{ url_for('register') }}">Registrati qui</a>
       </p>
   </form>
   </div>

@@ -54,25 +54,26 @@ def index():
         SELECT
         t.id AS task_id,
         t.title AS task_title,
-        "Nota aggiunta" AS update_type,
+        'Nota aggiunta' AS update_type,
         n.created_at AS updated_at
     FROM notes n
     JOIN tasks t ON n.task_id = t.id
+    WHERE t.user_id = ? 
 
     UNION ALL
 
     SELECT 
         t.id AS task_id,
         t.title AS task_title,
-        "Stato cambiato" AS update_type,
+    'Stato cambiato' AS update_type,
         sh.changed_at AS updated_at
     FROM status_history sh
     JOIN tasks t ON sh.task_id = t.id
-    WHERE sh.from_status IS NOT NULL
+    WHERE sh.from_status IS NOT NULL AND t.user_id = ?
 
     ORDER BY updated_at DESC
     LIMIT 10
-    ''').fetchall()
+    ''',(user_id, user_id)).fetchall()
     conn.close()
     return render_template('/index.html', status_count=status_count, overdue_list=overdue_list, upcoming_list=upcoming_list, updates_list=last_updates)
 
