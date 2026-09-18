@@ -37,6 +37,7 @@ if os.getenv("SECRET_KEY"):
 else:
     raise ValueError("SECRET_KEY not found in environment variables. Please set it in the .env file.")
 
+
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
