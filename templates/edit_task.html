@@ -1,0 +1,108 @@
+{% extends 'layout.html' %} {% block title %} Modifica Task {% endblock %} {%
+block main %}
+<div class="new-task-page">
+  <div class="container">
+    <form
+      action="{{ url_for('edit_task', task_id=task.id) }}"
+      method="post"
+      class="d-flex flex-column gap-4"
+    >
+      <div>
+        <label for="titleInput" class="form-label">Titolo *</label>
+        <input
+          type="text"
+          class="form-control"
+          name="title"
+          id="titleInput"
+          required
+          autofocus
+          value="
+          {% if request.form.title %} {{request.form.title}}
+          {% else%}
+          {{ task.title }}
+          {% endif %}
+          "
+        />
+        <small class="text-danger">{{ title_message }}</small>
+      </div>
+      <div class="row g-4">
+        <div class="col-sm-6">
+          <label for="priorityInput" class="form-label">Priorità *</label>
+          <select
+            class="form-select"
+            name="priority"
+            id="priorityInput"
+            required
+          >
+            <option value="--" disabled selected>- -</option>
+            <option
+              value="Bassa"
+              {%
+              if
+              request.form.priority=""
+              ="Bassa"
+              %}selected{%
+              endif
+              %}
+            >
+              Bassa
+            </option>
+            <option
+              value="Media"
+              {%
+              if
+              request.form.priority=""
+              ="Media"
+              %}selected{%
+              endif
+              %}
+            >
+              Media
+            </option>
+            <option
+              value="Alta"
+              {%
+              if
+              request.form.priority=""
+              ="Alta"
+              %}selected{%
+              endif
+              %}
+            >
+              Alta
+            </option>
+          </select>
+          <small class="text-danger">{{ priority_message }}</small>
+        </div>
+        <div class="col-sm-6">
+          <label for="dueDateInput" class="form-label">Scadenza</label>
+          <input
+            type="date"
+            class="form-control"
+            name="due_date"
+            id="dueDateInput"
+            value="{% if request.form.due_date %} {{request.form.due_date}}
+            {% else%}
+            {{ task.due_date }}
+            {% endif %}"
+          />
+        </div>
+      </div>
+
+      <div>
+        <small class="text-muted">* Campi obbligatori</small>
+      </div>
+      <div class="d-flex justify-content-end gap-3 border-top pt-3">
+        <button
+          type="button"
+          class="btn btn-secondary"
+          onclick="history.back()"
+        >
+          Annulla
+        </button>
+        <button type="submit" class="btn btn-primary">Modifica Task</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

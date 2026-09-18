@@ -256,6 +256,48 @@ def new_task():
             conn.close()
             return redirect(url_for('task_detail', task_id=task_id))
 
+
+@app.route('/edit_task/<int:task_id>', methods=['GET', 'POST'])
+@login_required
+def edit_task(task_id):
+    if request.method == 'GET':
+        user_id = session['user_id']
+        conn = get_db_connection()
+        task = conn.execute(
+            'SELECT * FROM tasks WHERE id = ? AND user_id = ?',
+            (task_id, user_id)
+        ).fetchone()
+        if task is None:
+            conn.close()
+            return redirect(url_for('tasks'))
+        conn.close()
+        return render_template('/edit_Task.html', task=task)
+    
+    else:
+        title = request.form.get('title')
+        priority = request.form.get('priority')
+        due_date = request.form.get('due_date') or None
+        user_id = session['user_id']
+        if not title or not priority:
+            return render_template('/edit_task.html', title_message='Titolo richiesto' if not title else '', priority_message='Priorità richiesta' if not priority else '')
+        else:
+            conn = get_db_connection()
+            cur = conn.cursor()
+            cur.execute(
+                '''
+                UPDATE tasks
+                SET title = ?, priority = ?, due_date = ?
+                WHERE  user_id = ? AND id = ?
+                ''',
+                (title, priority, due_date, user_id, task_id)
+            )
+            conn.execute('UPDATE tasks SET updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?', (task_id, user_id))
+            conn.commit()
+            conn.close()
+            return redirect(url_for('task_detail', task_id=task_id))
+
+
+
 if __name__ == "__main__":
     debug_mode = os.getenv("DEBUG", "False").lower() == 'true'
     app.run(debug=debug_mode)
