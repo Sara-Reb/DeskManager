@@ -4,4 +4,4 @@ __pycache__/
 .venv/
 .env
 .prettierrc
-.node_modules/
+node_modules/
