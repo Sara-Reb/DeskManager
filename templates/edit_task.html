@@ -1,4 +1,4 @@
-{% extends 'layout.html' %} {% block title %} Modifica Task {% endblock %} {%
+{% extends 'layout.html' %} {% block title %}Modifica Task{% endblock %} {%
 block main %}
 <div class="new-task-page">
   <div class="container">
@@ -17,10 +17,11 @@ block main %}
           required
           autofocus
           value="
-          {% if request.form.title %} {{request.form.title}}
-          {% else%}
-          {{ task.title }}
-          {% endif %}
+          {% if request.form.title %}
+              {{ request.form.title }}
+            {% else %}
+              {{ task.title }}
+            {% endif %}
           "
         />
         <small class="text-danger">{{ title_message }}</small>
@@ -37,11 +38,13 @@ block main %}
             <option value="--" disabled selected>- -</option>
             <option
               value="Bassa"
+              {%if
+              request.form.priority=="Bassa"
+              or
+              task.priority=="Bassa"
+              %}
+              selected
               {%
-              if
-              request.form.priority=""
-              ="Bassa"
-              %}selected{%
               endif
               %}
             >
@@ -51,9 +54,12 @@ block main %}
               value="Media"
               {%
               if
-              request.form.priority=""
-              ="Media"
-              %}selected{%
+              request.form.priority=="Media"
+              or
+              task.priority=="Media"
+              %}
+              selected
+              {%
               endif
               %}
             >
@@ -63,9 +69,12 @@ block main %}
               value="Alta"
               {%
               if
-              request.form.priority=""
-              ="Alta"
-              %}selected{%
+              request.form.priority=="Alta"
+              or
+              task.priority=="Alta"
+              %}
+              selected
+              {%
               endif
               %}
             >
@@ -81,10 +90,11 @@ block main %}
             class="form-control"
             name="due_date"
             id="dueDateInput"
-            value="{% if request.form.due_date %} {{request.form.due_date}}
-            {% else%}
-            {{ task.due_date }}
-            {% endif %}"
+            value="{% if request.form.due_date %}
+                {{ request.form.due_date }}
+              {% else %}
+                {{ task.due_date }}
+              {% endif %}"
           />
         </div>
       </div>

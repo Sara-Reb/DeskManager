@@ -286,12 +286,11 @@ def edit_task(task_id):
             cur.execute(
                 '''
                 UPDATE tasks
-                SET title = ?, priority = ?, due_date = ?
+                SET title = ?, priority = ?, due_date = ?, updated_at = CURRENT_TIMESTAMP
                 WHERE  user_id = ? AND id = ?
                 ''',
                 (title, priority, due_date, user_id, task_id)
             )
-            conn.execute('UPDATE tasks SET updated_at = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?', (task_id, user_id))
             conn.commit()
             conn.close()
             return redirect(url_for('task_detail', task_id=task_id))
