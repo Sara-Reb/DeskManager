@@ -2,7 +2,11 @@
 main %}
 <div class="new-task-page">
   <div class="container">
-    <form action="/new_task" method="post" class="d-flex flex-column gap-4">
+    <form
+      action="{{ url_for('new_task') }}"
+      method="post"
+      class="d-flex flex-column gap-4"
+    >
       <div>
         <label for="titleInput" class="form-label">Titolo *</label>
         <input
