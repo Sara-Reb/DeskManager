@@ -296,6 +296,17 @@ def edit_task(task_id):
             return redirect(url_for('task_detail', task_id=task_id))
 
 
+@app.route('/delete_task/<int:task_id>', methods=['POST'])
+@login_required
+def delete_task(task_id):
+    user_id = session['user_id']
+    conn = get_db_connection()
+    conn.execute('DELETE FROM tasks WHERE id = ? AND user_id = ?', (task_id, user_id))
+    conn.commit()
+    conn.close()
+    return redirect(url_for('tasks'))
+
+
 
 if __name__ == "__main__":
     debug_mode = os.getenv("DEBUG", "False").lower() == 'true'
