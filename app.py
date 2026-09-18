@@ -1,11 +1,13 @@
 
 
-from flask import Flask, render_template, request, redirect, session
+from flask import Flask, render_template, request, redirect, session, url_for
 from flask_session import Session
 import sqlite3
 from helpers import login_required, get_db_connection, display_date
 from bcrypt import gensalt, hashpw, checkpw
 import datetime as dt
+import os
+import dotenv
 
 
 STATUS_CLASSES = {
@@ -29,6 +31,12 @@ PRIORITY_CLASSES = {
 }
 
 app = Flask(__name__)
+dotenv.load_dotenv()
+if os.getenv("SECRET_KEY"):
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+else:
+    raise ValueError("SECRET_KEY not found in environment variables. Please set it in the .env file.")
+
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
@@ -104,7 +112,7 @@ def login():
                 return render_template('/login.html',check_message=message)
             else:
                 session['user_id'] = user['id']
-            return redirect('/')
+            return redirect(url_for('index'))
 
 
 
@@ -152,12 +160,12 @@ def register():
             else:
                 connection.commit()
                 connection.close()
-            return redirect('/login')
+            return redirect(url_for('login'))
     
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect ('/')
+    return redirect(url_for('index'))
 
 
 @app.route("/tasks")
@@ -168,7 +176,7 @@ def tasks():
     tasks = conn.execute('SELECT * FROM tasks WHERE user_id = ? ',(user_id,)).fetchall()
     conn.close()
     selected_status = request.args.get("status") or ''
-    return render_template('/tasks.html', tasks=tasks, status_classes=STATUS_CLASSES, priority_class=PRIORITY_CLASSES, selected_status=selected_status)
+    return render_template('tasks.html', tasks=tasks, status_classes=STATUS_CLASSES, priority_class=PRIORITY_CLASSES, selected_status=selected_status)
 
 @app.route('/tasks/<int:task_id>',methods=['GET', 'POST'])
 @login_required
@@ -185,12 +193,12 @@ def task_detail(task_id):
 
         if row is None:
             conn.close()
-            return redirect('/tasks')
+            return redirect(url_for('tasks'))
 
         from_status = row['status']
         if (not content and status == from_status) or (status and status != from_status and status not in STATUS_ALLOWED_TRANSITIONS[from_status]):
             conn.close()
-            return redirect(f'/tasks/{task_id}')
+            return redirect(url_for('task_detail', task_id=task_id))
         else:
             if content:
                 
@@ -204,7 +212,7 @@ def task_detail(task_id):
                 
             conn.commit()
             conn.close()
-            return redirect(f'/tasks/{task_id}')
+            return redirect(url_for('task_detail', task_id=task_id))
     else:
         user_id = session['user_id']
         conn = get_db_connection()
@@ -215,7 +223,7 @@ def task_detail(task_id):
 
         if task is None:
             conn.close()
-            return redirect('/tasks')
+            return redirect(url_for('tasks'))
         notes = conn.execute('SELECT * FROM notes WHERE task_id = ? ORDER BY created_at DESC',(task_id,)).fetchall()
         status_history = conn.execute('SELECT * FROM status_history WHERE task_id = ? ORDER BY changed_at DESC',(task_id,)).fetchall()
         conn.close()
@@ -246,7 +254,8 @@ def new_task():
             
             conn.commit()
             conn.close()
-            return redirect(f'/tasks/{task_id}')
+            return redirect(url_for('task_detail', task_id=task_id))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    debug_mode = os.getenv("DEBUG", "False").lower() == 'true'
+    app.run(debug=debug_mode)
