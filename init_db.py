@@ -44,7 +44,7 @@ def init_and_seed():
         task_ids = []
         for title, priority, due_date in demo_tasks:
             cur.execute(
-                "INSERT INTO tasks(user_id, title, priority, status, due_date) VALUES(?,?,'Aperta',?)",
+                "INSERT INTO tasks(user_id, title, priority, status, due_date) VALUES(?,?,?,'Aperta',?)",
                 (user_id, title, priority, due_date)
             )
             task_id = cur.lastrowid
