@@ -12,7 +12,6 @@ def login_required(f):
             return redirect('/landing')
         return f(*args, **kwargs)
     return decorated_function
-    
 
 def get_db_connection():
     # Function to establish a connection to the SQLite database
@@ -20,6 +19,8 @@ def get_db_connection():
     connection.execute("PRAGMA foreign_keys = ON")  # Enable foreign key support
     connection.row_factory = sqlite3.Row
     return connection
+
+
 
 def display_date(date_str):
     # Function to convert a date string into a more readable format

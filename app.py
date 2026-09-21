@@ -8,6 +8,7 @@ from bcrypt import gensalt, hashpw, checkpw
 import datetime as dt
 import os
 import dotenv
+from init_db import init_and_seed
 
 
 STATUS_CLASSES = {
@@ -36,11 +37,11 @@ if os.getenv("SECRET_KEY"):
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 else:
     raise ValueError("SECRET_KEY not found in environment variables. Please set it in the .env file.")
-
-
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+init_and_seed()  # Initialize and seed the database
 
 app.jinja_env.filters['display_date'] = display_date
 
