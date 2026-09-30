@@ -1,11 +1,57 @@
+/* ==========================================================================
+   DeskManager — Design System
+   Ispirazione: schedario/registro di un ufficio pratiche assicurative.
+   Font: IBM Plex Serif (titoli) + IBM Plex Sans (corpo/UI).
+   Aggiungi in layout.html, dentro <head>, prima di questo foglio:
 
-*{
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+   ========================================================================== */
+
+:root {
+  /* Palette */
+  --ink: #1B2A3C;          /* blu inchiostro — navbar, testo forte, azioni primarie */
+  --ink-soft: #33435A;
+  --paper: #F6F4EF;        /* sfondo carta */
+  --paper-raised: #FFFFFF; /* superfici "sollevate": card, tabelle */
+  --line: #D8D2C4;         /* riga di registro — bordi, separatori */
+  --line-strong: #B9B2A0;
+  --rust: #B5542A;         /* priorità alta, azioni distruttive */
+  --rust-dark: #8F4020;
+  --slate: #2E3540;        /* testo corpo */
+  --slate-muted: #6B7280;
+
+  /* Stati (badge) */
+  --status-aperta: #6B7280;
+  --status-attesa: #B5822B;
+  --status-lavorazione: #2C5282;
+  --status-completata: #3F6B4F;
+
+  /* Tipografia */
+  --font-display: "IBM Plex Serif", Georgia, serif;
+  --font-body: "IBM Plex Sans", -apple-system, Segoe UI, sans-serif;
+
+  --bs-body-bg: var(--paper);
+  --bs-body-color: var(--slate);
+  --bs-body-font-family: var(--font-body);
+  --bs-border-color: var(--line);
+  --bs-link-color: var(--ink);
+  --bs-link-hover-color: var(--rust);
+  --bs-border-radius: 3px;
+  --bs-border-radius-lg: 4px;
+  --bs-border-radius-sm: 2px;
+}
+
+* {
   box-sizing: border-box;
 }
 
 body {
   height: 100vh;
   min-width: 320px;
+  background-color: var(--paper);
+  color: var(--slate);
 }
 
 main > .container {
@@ -13,20 +59,333 @@ main > .container {
   padding: 1rem;
 }
 
-
-/* landing page */
- .landing-page p {
-  font-size: 1.2rem;
+h1, h2, h3, h4, h5, h6,
+.card-title, .card-header {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0;
 }
 
-/* login page */
+h1 {
+  font-size: 1.85rem;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 0.5rem;
+  display: inline-block;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Focus visibile, accessibile, coerente col tema */
+a:focus-visible,
+button:focus-visible,
+.btn:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--rust);
+  outline-offset: 2px;
+}
+
+
+/* ==========================================================================
+   Navbar — "carta intestata"
+   ========================================================================== */
+
+.navbar {
+  background-color: var(--ink) !important;
+  border-bottom: 3px solid var(--rust);
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+}
+
+.navbar-brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--paper) !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.navbar .nav-link {
+  color: rgba(246, 244, 239, 0.82) !important;
+  font-weight: 500;
+  padding: 0.4rem 0.9rem !important;
+  border-radius: var(--bs-border-radius);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+  color: var(--paper) !important;
+  background-color: rgba(246, 244, 239, 0.1);
+}
+
+
+/* ==========================================================================
+   Bottoni
+   ========================================================================== */
+
+.btn {
+  font-family: var(--font-body);
+  font-weight: 500;
+  border-radius: var(--bs-border-radius);
+  padding: 0.5rem 1.1rem;
+}
+
+.btn-primary {
+  background-color: var(--ink) !important;
+  border-color: var(--ink) !important;
+  color: var(--paper) !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: var(--ink-soft) !important;
+  border-color: var(--ink-soft) !important;
+}
+
+.btn-secondary {
+  background-color: transparent !important;
+  border-color: var(--line-strong) !important;
+  color: var(--slate) !important;
+}
+
+.btn-secondary:hover {
+  background-color: var(--line) !important;
+  border-color: var(--line-strong) !important;
+  color: var(--ink) !important;
+}
+
+.btn-danger {
+  background-color: var(--rust) !important;
+  border-color: var(--rust) !important;
+  color: var(--paper) !important;
+}
+
+.btn-danger:hover {
+  background-color: var(--rust-dark) !important;
+  border-color: var(--rust-dark) !important;
+}
+
+
+/* ==========================================================================
+   Form
+   ========================================================================== */
+
+.form-control,
+.form-select {
+  background-color: var(--paper-raised);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--bs-border-radius);
+  color: var(--slate);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(27, 42, 60, 0.12);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+
+
+/* ==========================================================================
+   Badge — stati e priorità
+   Sovrascrive le utility Bootstrap usate da STATUS_CLASSES / PRIORITY_CLASSES
+   ========================================================================== */
+
+.badge {
+  font-family: var(--font-body);
+  font-weight: 500;
+  border-radius: 2px;
+  padding: 0.35em 0.65em;
+}
+
+/* Stato: Aperta */
+.text-bg-secondary {
+  background-color: var(--status-aperta) !important;
+  color: var(--paper) !important;
+}
+
+/* Stato: In attesa / Priorità: Media */
+.text-bg-warning {
+  background-color: var(--status-attesa) !important;
+  color: var(--paper) !important;
+}
+
+/* Stato: In lavorazione */
+.text-bg-primary {
+  background-color: var(--status-lavorazione) !important;
+  color: var(--paper) !important;
+}
+
+/* Stato: Completata */
+.text-bg-success {
+  background-color: var(--status-completata) !important;
+  color: var(--paper) !important;
+}
+
+/* Priorità: Alta */
+.text-bg-danger {
+  background-color: var(--rust) !important;
+  color: var(--paper) !important;
+}
+
+/* Sfondi "subtle" dei box statistica in dashboard */
+.bg-secondary-subtle { background-color: #E9EAEC !important; }
+.bg-warning-subtle   { background-color: #F3E7D2 !important; }
+.bg-primary-subtle   { background-color: #DDE6F0 !important; }
+.bg-success-subtle   { background-color: #DFEBE3 !important; }
+
+
+/* ==========================================================================
+   Card — schedario, non SaaS
+   ========================================================================== */
+
+.card {
+  background-color: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--bs-border-radius);
+  box-shadow: none;
+}
+
+.card-header {
+  background-color: var(--paper-raised);
+  border-bottom: 2px solid var(--ink);
+  font-size: 1rem;
+  padding: 0.75rem 1.1rem;
+}
+
+/* Box statistica dashboard: link cliccabili, no ombra, accento inferiore */
+a.card.text-center {
+  border: 1px solid var(--line);
+  border-bottom: 3px solid var(--line-strong);
+  transition: border-color 0.15s ease, transform 0.1s ease;
+}
+
+a.card.text-center:hover {
+  border-bottom-color: var(--ink);
+  transform: translateY(-1px);
+}
+
+a.card.text-center .card-title {
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+
+/* ==========================================================================
+   Liste (dashboard: scadute, prossime, attività recenti)
+   ========================================================================== */
+
+.list-group-item {
+  background-color: transparent;
+  border-color: var(--line);
+  padding: 0.65rem 0.9rem;
+  color: var(--slate);
+}
+
+.list-group-item.list-group-item-warning {
+  background-color: #F3E7D2;
+  border-color: var(--line);
+}
+
+a.list-group-item:hover {
+  background-color: #EFECE3;
+  color: var(--ink);
+}
+
+
+/* ==========================================================================
+   Tabella task — stile registro
+   ========================================================================== */
+
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-striped-bg: #EFECE3;
+  border-collapse: collapse;
+}
+
+.table thead th {
+  font-family: var(--font-body);
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom: 2px solid var(--ink) !important;
+  background-color: var(--paper);
+  font-size: 0.88rem;
+}
+
+.table tbody tr {
+  cursor: pointer;
+}
+
+.table tbody tr:hover {
+  background-color: #EFECE3 !important;
+}
+
+.table td, .table th {
+  border-color: var(--line);
+  padding: 0.6rem 0.75rem;
+  vertical-align: middle;
+}
+
+/* DataTables: riusa le variabili già definite sopra, minimi ritocchi */
+.dataTables_wrapper .form-select,
+.dataTables_wrapper .form-control {
+  font-size: 0.85rem;
+}
+
+.dt-paging .btn,
+.dt-paging button {
+  border-radius: var(--bs-border-radius);
+}
+
+
+/* ==========================================================================
+   Landing page
+   ========================================================================== */
+
+.landing-page p {
+  font-size: 1.15rem;
+  color: var(--slate-muted);
+}
+
+.landing-page h1 {
+  font-size: 2.75rem;
+  line-height: 1.15;
+}
+
+
+/* ==========================================================================
+   Login / Register
+   ========================================================================== */
+
 .login-page form,
 .register-page form {
   max-width: 400px;
   margin: auto;
+  background-color: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--bs-border-radius);
+  padding: 2rem;
 }
 
-/* task detail page */
+
+/* ==========================================================================
+   Task detail — layout invariato, restyle visivo
+   ========================================================================== */
+
 .task-col-1 {
   max-height: 45vh;
 }
@@ -35,21 +394,21 @@ main > .container {
   max-height: 65vh;
 }
 
-
-/* task detail layout fix */
 .task-detail-page * {
   min-height: 0;
 }
 
 
-/* Dashboard */
+/* ==========================================================================
+   Dashboard — layout invariato
+   ========================================================================== */
 
- .row-first {
+.row-first {
   max-height: 25vh;
 }
 
- .row-second > [class^="col-"] {
-    max-height: 45vh;
+.row-second > [class^="col-"] {
+  max-height: 45vh;
 }
 
 @media (min-width: 768px) {
@@ -61,7 +420,7 @@ main > .container {
     max-height: 25%;
   }
 
-  .row-second{
+  .row-second {
     max-height: 75%;
   }
   .row-second > [class^="col-"] {

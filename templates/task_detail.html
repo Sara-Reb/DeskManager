@@ -4,7 +4,7 @@
     <div class="flex-shrink-0 ">
       <div class=" d-flex flex-column flex-sm-row gap-3 mb-3  ">
         <h2>{{ task.title }}</h2>
-        <div class="d-flex gap-3 ms-auto">
+        <div class="d-flex gap-3 ms-auto align-items-center">
           <a
             href="{{ url_for('edit_task', task_id=task.id) }}"
             class="btn btn-primary"
@@ -53,7 +53,7 @@
                 <div class="d-flex">
                   <img
                     src="/static/images/calendar-plus-svgrepo-com.svg"
-                    alt="added"
+                    alt="creazione"
                     width="20"
                   />
                   <p class="card-text">Creata:</p>
@@ -67,7 +67,7 @@
                 <div class="d-flex">
                   <img
                     src="/static/images/calendar-warning-svgrepo-com.svg"
-                    alt="added"
+                    alt="scadenza"
                     width="20"
                   />
                   <p class="card-text">Scadenza:</p>
@@ -80,7 +80,7 @@
                 <div class="d-flex">
                   <img
                     src="/static/images/calendar-edit-svgrepo-com.svg"
-                    alt="added"
+                    alt="aggiornamento"
                     width="20"
                   />
                   <p class="card-text">Aggiornato:</p>

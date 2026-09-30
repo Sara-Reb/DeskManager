@@ -273,7 +273,7 @@ def edit_task(task_id):
             conn.close()
             return redirect(url_for('tasks'))
         conn.close()
-        return render_template('/edit_Task.html', task=task)
+        return render_template('/edit_task.html', task=task)
     
     else:
         title = request.form.get('title')
