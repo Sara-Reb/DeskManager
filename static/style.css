@@ -125,6 +125,14 @@ textarea:focus-visible {
   background-color: rgba(246, 244, 239, 0.1);
 }
 
+.navbar-toggler {
+  border-color: rgba(246, 244, 239, 0.35);
+}
+ 
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(246, 244, 239, 0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
 
 /* ==========================================================================
    Bottoni
@@ -248,7 +256,7 @@ textarea:focus-visible {
 
 
 /* ==========================================================================
-   Card — schedario, non SaaS
+   Card 
    ========================================================================== */
 
 .card {
@@ -265,7 +273,6 @@ textarea:focus-visible {
   padding: 0.75rem 1.1rem;
 }
 
-/* Box statistica dashboard: link cliccabili, no ombra, accento inferiore */
 a.card.text-center {
   border: 1px solid var(--line);
   border-bottom: 3px solid var(--line-strong);
@@ -308,7 +315,7 @@ a.list-group-item:hover {
 
 
 /* ==========================================================================
-   Tabella task — stile registro
+   Tabella task 
    ========================================================================== */
 
 .table {
@@ -340,7 +347,6 @@ a.list-group-item:hover {
   vertical-align: middle;
 }
 
-/* DataTables: riusa le variabili già definite sopra, minimi ritocchi */
 .dataTables_wrapper .form-select,
 .dataTables_wrapper .form-control {
   font-size: 0.85rem;
@@ -383,7 +389,7 @@ a.list-group-item:hover {
 
 
 /* ==========================================================================
-   Task detail — layout invariato, restyle visivo
+   Task detail 
    ========================================================================== */
 
 .task-col-1 {
@@ -400,7 +406,7 @@ a.list-group-item:hover {
 
 
 /* ==========================================================================
-   Dashboard — layout invariato
+   Dashboard 
    ========================================================================== */
 
 .row-first {
