@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import redirect, session, render_template
+from flask import redirect, session, render_template, url_for
 import sqlite3
 import datetime as dt
 
@@ -9,7 +9,7 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if session.get('user_id') is None:
-            return redirect('/landing')
+            return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
 

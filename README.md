@@ -71,6 +71,15 @@ L'app parte su `http://127.0.0.1:5000`. Al primo avvio il database viene creato 
 - **username:** `demo`
 - **password:** `demo1234`
 
+## Formattazione codice
+
+I template Jinja sono formattati con [Prettier](https://prettier.io) e il plugin [prettier-plugin-jinja-template](https://github.com/davidodenwald/prettier-plugin-jinja-template), che permette a Prettier di capire la sintassi Jinja senza romperla. La configurazione è in `.prettierrc`.
+
+```bash
+npm install
+npx prettier --write templates/
+```
+
 ## Limiti noti
 
 - Niente protezione CSRF sui form
@@ -81,6 +90,4 @@ L'app parte su `http://127.0.0.1:5000`. Al primo avvio il database viene creato 
 
 - Export delle pratiche in CSV/PDF
 - Notifiche per le scadenze imminenti
-- Grafici sull'andamento delle pratiche nel tempo
-- Filtri avanzati per intervallo di date
 - Gestione multi-utente con ruoli, per lavorarci in team
